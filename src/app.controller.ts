@@ -1,8 +1,24 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  HttpStatus,
+  HttpCode,
+  ParseIntPipe,
+  Query,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ExampleResponse } from './lib';
-import { RegisterResponse } from './response';
-import { RegisterDto } from './dto';
+import {
+  LoginDto,
+  RegisterDto,
+  RegisterResponse,
+  ExampleResponse,
+  LoginResponse,
+  UpdateResponse,
+  DeleteResponse,
+} from '.';
 
 @Controller('app')
 export class AppController {
@@ -24,9 +40,50 @@ export class AppController {
       data: {
         id: 1,
         name: registerDto.name,
-        token:
-          'eyJFaKeciOiJIUzIe5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFsaSIsImlhdCI6MTYFaKewNjEwNiwiZXhwIjozNzY5MjYwNjEwNn0.hN70LLzng5fehIce99DnvFaKewGlMfDE==',
+        token: 'BLABLABLA',
       },
+    };
+  }
+  @ApiTags('Auth')
+  @Post('/auth/login')
+  @HttpCode(HttpStatus.OK)
+  @ExampleResponse({
+    type: LoginResponse,
+    showResponse: { showNotFound: false, showUnSupportedMediaType: false },
+  })
+  async login(@Body() loginDto: LoginDto) {
+    return {
+      data: {
+        id: 1,
+        name: loginDto.name,
+        token: 'BLABLABLA',
+      },
+    };
+  }
+
+  @ApiTags('Example CRUD')
+  @ExampleResponse({
+    type: UpdateResponse,
+    showResponse: { forbidden: true },
+  })
+  @Put('/update')
+  async updateSMT(@Query('id', ParseIntPipe) id: number) {
+    return {
+      id,
+      updatedData: 'BLAH',
+    };
+  }
+
+  @ApiTags('Example CRUD')
+  @ExampleResponse({
+    type: DeleteResponse,
+    showResponse: { showUnSupportedMediaType: false, forbidden: true },
+  })
+  @Delete('/delete')
+  async deleteSMT(@Query('id', ParseIntPipe) id: number) {
+    return {
+      id,
+      message: 'Successfully deleted',
     };
   }
 }
