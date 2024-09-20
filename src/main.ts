@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { TransformInterceptor } from './lib';
 
 async function bootstrap() {
   const logger = new Logger('NestSwaggerDocs');
@@ -12,6 +13,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger/api/document', app, document);
 
+  app.useGlobalInterceptors(new TransformInterceptor());
   const port = process.env.PORT || 5000;
   await app.listen(port, () => logger.log(`Server running at port: ${port}`));
 }

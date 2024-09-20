@@ -8,6 +8,7 @@ import {
   Query,
   Put,
   Delete,
+  Get,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import {
@@ -18,6 +19,7 @@ import {
   LoginResponse,
   UpdateResponse,
   DeleteResponse,
+  GetResponse,
 } from '.';
 
 @Controller('app')
@@ -84,6 +86,25 @@ export class AppController {
     return {
       id,
       message: 'Successfully deleted',
+    };
+  }
+
+  @ApiTags('Example CRUD')
+  @ExampleResponse({
+    type: GetResponse,
+    showResponse: {
+      showUnSupportedMediaType: false,
+      forbidden: true,
+      showNotFound: true,
+    },
+  })
+  @Get('/read')
+  async read(@Query('id', ParseIntPipe) id: number) {
+    return {
+      id,
+      data: {
+        key: 'value',
+      },
     };
   }
 }
