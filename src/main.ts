@@ -9,9 +9,14 @@ async function bootstrap() {
   const logger = new Logger('NestSwaggerDocs');
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  const config = new DocumentBuilder().setTitle('NestSwaggerDocs').build();
+  const config = new DocumentBuilder()
+    .setTitle('NestSwaggerDocs')
+    .setDescription('See the structure of all possibles responses here!')
+    .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('swagger/api/document', app, document);
+  SwaggerModule.setup('swagger/api/document', app, document, {
+    swaggerOptions: { defaultModelsExpandDepth: -1 },
+  });
 
   app.useGlobalInterceptors(new TransformInterceptor());
   const port = process.env.PORT || 5000;
